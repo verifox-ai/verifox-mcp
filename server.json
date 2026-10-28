@@ -1,0 +1,46 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.verifox/email-verifier",
+  "description": "Verify email deliverability & find business emails (single or bulk) via the Verifox API.",
+  "version": "1.2.2",
+  "websiteUrl": "https://verifox.ai",
+  "repository": {
+    "url": "https://github.com/verifoxturnix1/verifox-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "verifox-mcp",
+      "version": "1.2.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "VERIFOX_API_KEY",
+          "description": "Your Verifox API key (foxkey_...). Get 1,000 free credits at https://verifox.ai/dashboard/api",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.verifox.ai/mcp",
+      "headers": [
+        {
+          "name": "x-api-key",
+          "description": "Your Verifox API key (foxkey_...). Get 1,000 free credits at https://verifox.ai/dashboard/api",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
