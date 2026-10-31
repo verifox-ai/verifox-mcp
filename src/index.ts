@@ -4,10 +4,23 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import http from "node:http";
 import { AsyncLocalStorage } from "node:async_hooks";
+import { readFileSync } from "node:fs";
 import { z } from "zod";
 
 // Base URL of the Verifox REST API. Override with VERIFOX_API_URL for local dev.
 const API_URL = (process.env.VERIFOX_API_URL ?? "https://api.verifox.ai").replace(/\/+$/, "");
+
+// Server version, read from package.json so serverInfo never drifts from the
+// published package. dist/ind ex.js and package.json ship one dir apart (both in
+// npm and the .mcpb bundle), so "../package.json" resolves in either layout.
+const VERSION = (() => {
+  try {
+    const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+    return typeof pkg.version === "string" ? pkg.version : "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+})();
 
 // The Verifox API key (foxkey_…). stdio: from VERIFOX_API_KEY. HTTP (multi-tenant):
 // per request from the Authorization header, carried via AsyncLocalStorage so the
@@ -164,13 +177,13 @@ const WAIT_MS = 55_000;
 // ── Server factory (fresh instance per HTTP request; single for stdio) ───────
 
 function buildServer(): McpServer {
-  const server = new McpServer({ name: "verifox", version: "1.2.0" });
+  const server = new McpServer({ name: "verifox", version: VERSION });
 
   server.registerTool(
     "verify_email",
     {
       description:
-        "Verify whether ONE email address is deliverable. Checks syntax, MX, SMTP, catch-all, disposable, free-provider and role detection, and returns a 0-100 quality score. Charges 1 Fox Credit per uncached email.",
+        "Verify whether ONE email address is deliverable. Checks syntax, MX, SMTP, catch-all, disposable, free-provider and role detection, and returns a 0-100 quality score. Charges 1 Fox Credit per check, including a repeat answered from the 24-hour result cache.",
       inputSchema: {
         email: z.string().email().describe("Email address to verify"),
         proxy: z.boolean().optional().describe("Use a SOCKS5 proxy for the SMTP check"),

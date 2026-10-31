@@ -1,0 +1,69 @@
+{
+  "manifest_version": "0.2",
+  "name": "verifox-email-verifier",
+  "display_name": "Verifox Email Verifier",
+  "version": "1.2.2",
+  "description": "Verify email deliverability and find business emails — single or bulk.",
+  "long_description": "Give Claude the Verifox API. Verify whether an email is deliverable (SMTP, MX, catch-all, disposable, role and free checks with a 0-100 quality score) and find business emails from a name + company domain — one at a time or in bulk. Bring your own Verifox API key; get 1,000 free credits at https://verifox.ai/dashboard/api.",
+  "author": {
+    "name": "Verifox",
+    "url": "https://verifox.ai"
+  },
+  "homepage": "https://verifox.ai",
+  "documentation": "https://verifox.ai/email-verification-mcp",
+  "support": "https://verifox.ai",
+  "icon": "icon.png",
+  "license": "MIT",
+  "keywords": ["email", "email-verification", "email-finder", "deliverability", "verifox"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "VERIFOX_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "verify_email",
+      "description": "Verify ONE email — SMTP deliverability, catch-all, disposable, role, free + 0-100 score"
+    },
+    {
+      "name": "verify_emails",
+      "description": "Bulk-verify a list of emails — one result per email"
+    },
+    {
+      "name": "find_email",
+      "description": "Find ONE business email from a name + company domain"
+    },
+    {
+      "name": "find_emails",
+      "description": "Bulk-find emails for a list of name + domain contacts"
+    },
+    {
+      "name": "get_credits",
+      "description": "Check the account's remaining Fox Credit balance"
+    },
+    {
+      "name": "get_job",
+      "description": "Poll a long-running bulk verify/find job for results"
+    }
+  ],
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "Verifox API Key",
+      "description": "Your foxkey_... — get 1,000 free credits at verifox.ai/dashboard/api",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

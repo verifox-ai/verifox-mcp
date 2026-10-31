@@ -1,6 +1,7 @@
 {
   "name": "verifox-mcp",
-  "version": "1.2.0",
+  "version": "1.2.2",
+  "mcpName": "ai.verifox/email-verifier",
   "description": "Verifox MCP server — verify email deliverability and find business emails (single + bulk) for Claude and any MCP client.",
   "type": "module",
   "license": "MIT",
